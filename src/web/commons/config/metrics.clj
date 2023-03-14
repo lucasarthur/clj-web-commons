@@ -3,9 +3,11 @@
 
 (def health-statuses {:up   {:status 200 :message "up"}
                       :down {:status 503 :message "down"}})
+(def metrics-path
+  (-> :metrics-path env (or "/metrics")))
 
 (def health-path
-  (str (or (env :metrics-path) "/metrics") "/health"))
+  (str metrics-path "/health"))
 
 (defonce health-status (atom (:down health-statuses)))
 

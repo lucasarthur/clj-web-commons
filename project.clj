@@ -20,5 +20,4 @@
                  [com.github.seancorfield/honeysql "2.4.1002"]
                  [lobos "1.0.0-beta3"]
                  [clj-commons/iapetos "0.1.13"]
-                 [io.prometheus/simpleclient_hotspot "0.16.0"]]
-  :repl-options {:init-ns clj-web-commons.core})
+                 [io.prometheus/simpleclient_hotspot "0.16.0"]])
