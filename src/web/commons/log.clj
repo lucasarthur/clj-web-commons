@@ -1,5 +1,6 @@
 (ns web.commons.log
   (:require
+   [web.commons.util.app :refer [on-shutdown]]
    [com.brunobonacci.mulog.core :refer [log* *default-logger*]]
    [com.brunobonacci.mulog.buffer :refer [ring-buffer]]
    [com.brunobonacci.mulog :as u :refer [start-publisher!]]
@@ -8,7 +9,7 @@
   (:import [org.slf4j LoggerFactory]))
 
 (defonce ^:private stoppers (atom ()))
-(defonce ^:private ^:dynamic *kafka-logger* (atom (ring-buffer 1000)))
+(defonce ^:dynamic *kafka-logger* (atom (ring-buffer 1000)))
 
 (defn- add-stoppers! [& -stoppers]
   (swap! stoppers #(into % (->> -stoppers (reduce conj [])))))
@@ -37,4 +38,5 @@
                       {:type :kafka
                        :kafka {:bootstrap.servers (env :kafka-brokers)}
                        :topic (env :kafka-logging-topic)}))
+   (on-shutdown stop-loggers!)
    (set-level! level)))
