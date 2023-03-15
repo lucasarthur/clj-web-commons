@@ -1,4 +1,4 @@
-(defproject clj-web-commons "0.1.1"
+(defproject clj-web-commons "0.1.2"
   :description "lib w/ common tools for web development on clojure"
   :url "https://github.com/lucasarthur/clj-web-commons"
   :license {:name "GNU General Public License v3.0"
