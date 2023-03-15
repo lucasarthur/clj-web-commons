@@ -1,4 +1,4 @@
-(defproject clj-web-commons "0.1.1"
+(defproject clj-web-commons "0.1.2"
   :description "lib w/ common tools for web development on clojure"
   :url "https://github.com/lucasarthur/clj-web-commons"
   :license {:name "GNU General Public License v3.0"
@@ -8,6 +8,7 @@
                  [metosin/ring-swagger-ui "5.0.0-alpha.0"]
                  [manifold "0.3.0" :exclusions [org.clj-commons/dirigiste]]
                  [aleph "0.6.1"]
+                 [zerg000000/simple-cors "0.0.8"]
                  [ring/ring-defaults "0.3.4"]
                  [compojure "1.7.0"]
                  [cheshire "5.11.0"]
