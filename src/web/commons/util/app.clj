@@ -12,9 +12,10 @@
   (swap! server-shutdown-hook (constantly hook)))
 
 (defn set-log-shutdown-hook! [hook]
-  (swap! log-shutdown-hook (constantly #(do
-                                          (Thread/sleep 1000)  ;; wait for gracefully loggy termination of app
-                                          (hook)))))
+  (swap! log-shutdown-hook
+         (constantly #(do
+                        (Thread/sleep 1000)  ;; wait for gracefully loggy termination of app
+                        (hook)))))
 
 (defn- shutdown []
   (doseq [f @hooks] (f))
