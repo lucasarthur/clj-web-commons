@@ -1,6 +1,6 @@
 (ns web.commons.middleware.metrics
   (:require
-   [web.commons.util.app :refer [on-shutdown]]
+   [web.commons.util.app :refer [add-shutdown-hook!]]
    [web.commons.config.metrics :refer [metrics-path health-path get-health-status set-health-status! health-statuses]]
    [web.commons.middleware.json :refer [wrap-json-response]]
    [iapetos.core :refer [collector-registry register histogram]]
@@ -35,7 +35,7 @@
   (ring/wrap-metrics handler registry {:path metrics-path}))
 
 (defn wrap-health-checks [handler ready-check]
-  (on-shutdown #(set-health-status! :down))
+  (add-shutdown-hook! #(set-health-status! :down))
   (routes (health-checks ready-check) handler))
 
 (defn wrap-metrics

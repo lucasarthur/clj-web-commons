@@ -1,6 +1,6 @@
 (ns web.commons.kafka
   (:require
-   [web.commons.util.app :refer [on-shutdown]]
+   [web.commons.util.app :refer [add-shutdown-hook!]]
    [web.commons.config.kafka :refer [with-cfg]]
    [clojure.core.async :refer [chan close!]]
    [ketu.async.source :refer [source stop!]]
@@ -12,7 +12,7 @@
         stream (->source channel)
         consumer (source channel (with-cfg options))
         stop-fn #(stop! consumer)]
-    (on-shutdown stop-fn)
+    (add-shutdown-hook! stop-fn)
     {:consumer consumer
      :channel channel
      :stream stream
@@ -25,7 +25,7 @@
         producer (sink channel (-> options (dissoc :channel-size) with-cfg))
         stop-fn #(close! channel)]
     (connect stream channel)
-    (on-shutdown stop-fn)
+    (add-shutdown-hook! stop-fn)
     {:producer producer
      :channel channel
      :sink stream

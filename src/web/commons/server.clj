@@ -2,25 +2,28 @@
   (:require
    [aleph.http :refer [start-server]]
    [aleph.netty :as netty]
-   [web.commons.log :refer [init-loggers! stop-loggers! log]]
+   [web.commons.log :refer [init-loggers!]]
    [web.commons.config.metrics :refer [set-health-status!]]
-   [web.commons.util.app :as app]))
+   [web.commons.util.app :refer [set-server-shutdown-hook!]]))
 
-(defn port [server]
-  (netty/port server))
+(defonce server (atom nil))
+
+(defn port []
+  (netty/port @server))
+
+(defn stop-server! []
+  (when (not (nil? @server))
+    (.close @server)
+    (swap! server (constantly nil))))
 
 (defn start-server!
   [handler
-   {:keys [on-shutdown]
-    :or {on-shutdown (constantly :no-op)}
+   {:keys [on-start on-shutdown]
+    :or {on-start (constantly :no-op)
+         on-shutdown (constantly :no-op)}
     :as options}]
   (init-loggers!)
-  (let [server (start-server handler (dissoc options :on-shutdown))]
-    (log ::server-started :port (port server))
-    (set-health-status! :up)
-    (app/on-shutdown
-     #(do
-        (log ::app-shutdown)
-        (on-shutdown)
-        (.close server)
-        (stop-loggers!)))))
+  (swap! server (constantly (start-server handler (dissoc options :on-start :on-shutdown))))
+  (set-health-status! :up)
+  (on-start)
+  (set-server-shutdown-hook! #(do (on-shutdown) (stop-server!))))
